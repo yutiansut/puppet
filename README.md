@@ -1,64 +1,132 @@
-扯线木偶（puppet）
+『扯线木偶』Puppet Quant traderAPI
 ==
-项目停止开发！
+
+实现交易接口，突破交易桎梏！
 --
-Puppet是尝试利用Win32 API构造UIAutomation API的包装器。“目前”是在建项目(WIP)。生产环境建议使用更成熟的pywinauto库。
+实现了和股票交易客户端相同的【买卖撤查】功能。暂不支持【融资融券】交易功能。
 --
 
-**"只"支持Python3.x；使用Python2.x逆行者，瘫坐伸手党，或者求学写外挂者，勿扰！仅提供文档作为上路指南，请新司机自量力而行！**
-*********************************************************************************************************************************
+puppet扯线木偶目前仅适用于独立交易端核新版(即THS)，需配合量化交易框架(hikyuu, quantaxis, rqalpha, vnpy, etc)使用。
+-
+墙裂推荐使用实盘易，一站式量化交易解决方案 http://www.iguuu.com/e?x=19829
+-
 
-### 更新
+**安装**
 
-2017/7/14 更新至v0.4.18，修改kill_popup()，按钮标题改为'是(&Y)'。
+打开命令提示符[Command Prompt]终端。
+>git clone https://github.com/Raytone-D/puppet.git
+或者浏览 https://github.com/Raytone-D/puppet
+点击页面右侧的绿色按钮[Clone or download]，选择[Download ZIP]，解压后切换到puppet文件夹
+.\puppet>pip install -e .
+或者.\puppet>python setup.py install
 
-2017/7/13 更新至v0.4.17，增加kill_popup()函数，修改buy/sell函数。
+>python
+>>>import puppet
+>>>puppet.__version__
+>>>puppet.Client()
 
-2017/7/6 更新至v0.4.16，重新new、raffle()，cancel()，以及精简代码。不再支持连号打新。
 
-2017/7/5 更新至v0.4.15，修复属性返回值错误。
+**未实现的功能：**
 
-2017/7/4 更新至v0.4.14，修改属性的返回值为字典。增加属性entrustment，可以查委托合同号。修改copy_data等方法。
-2017/7/3 更新至v0.4.13，为buy/sell增加睡眠参数sec=0.3，更好地开车不翻车。复活了cancel_buy,cancel_sell, cancel_all。
+【逆回购】
 
-2017/7/2 更新至v0.4.12，增加单独的buy/sell，原来的双向委托下单改为buy2/sell2。修改取持仓数据的逻辑，更稳不翻车。
+【基金盘后业务】
 
-2017/6/28 更新至v0.4.11，修改buy/sell函数，避免漏单。（追求一秒十单的，别用这个版本！）
+**已实现的登录方法：**
 
-2017/6/27 更新至v0.4.10，增加查询市值的属性：market_value
+login()         登录客户端(支持通讯密码或验证码)
 
-2017/5/9 更新至v0.4.9，简化cancel()方法的代码，撤买可以这样用了cancel(600006)，撤卖cancel(600006, '撤卖')
+exit()          关闭客户端
 
-2017/4/19 大改自动登录的逻辑，autologon更新至v0.4
+**已实现的交易方法：**
 
-2017/4/18 修复自动登录的逻辑错误，现在能从单帐号自动切换到多帐号了。
+trade()          双向委托，【限价】或【市价】委托。
 
-2017/4/15 更新至v0.4.8，增加支持同花顺官方交易客户端“多账户”登录模式下多个券商帐号的切换。增加autologon.py, multi_raffle.py, autologon_raffle.py, “图解同花顺多账户一键打新.PDF”。
+buy()           【限价】或【市价】买入。
 
-2017/4/9 更新"扯线木偶API使用说明"，主要是说明参数的用法。
+sell()          【限价】或【市价】卖出。
 
-2017/4/6 更新至v0.4.7，改善raffle()的兼容性，不支持银河证券的同花顺客户端打新，只能用同花顺官方的交易端打新。
+cancel()        撤单
 
-2017/4/4 通达信版改一个控件代码，支持招商证券独立交易模式登录。
+cancel_order()  撤单
 
-2017/4/2 更新至v0.4.6，增加bingo中签查询。
+cancel_all()    全撤
 
-2017/4/1 更新至v0.4.5，修复了一个愚蠢的错误：symbol[0].startswith('')返回True，导致不打新股，一脸懵逼！
+cancel_buy()    撤买
 
-2017/3/28 更新至v0.4.4，支持buy()/sell()直接输数字下单，无需字符串。
+cancel_sell()   撤卖
 
-2017/3/10 更新至v0.4.3，优化输出效果，更友好。
+raffle()        新股申购
 
-2017/3/10 更新至v0.4.2，raffle增加skip参数，跳过指定的市场新股。
+**已实现的查询功能：**
 
-2017/3/10 更新到v0.4.1，小幅修改，部分优化，默认改为单交易客户端模式。 
+account         登录账号
 
-2017/3/9 v0.4版发布！增加一键打新(raffle)、查新股（new）功能。大幅度修改优化，强化拟人化操作逻辑。
+balance         可用余额
 
-2017/2/23 V0.3.5发布！小幅修改，改善操作流畅度。
+assets          总资产
 
-2017/2/22 v0.3发布！优化模拟人手交易的流程。
+position        持仓列表
 
-2017/2/21 v0.2.5发布！增加撤单（指定股票代码）功能。
+market_value    持仓市值
 
-2017/2/14 v0.2版发布！提供后台获取持仓数据。鸣谢网友liuyukuan博文中提供的AHK代码“SendMessage,0x111,57634,0,CVirtualGridCtrl2,同花顺”。
+cancelable      可撤委托
+
+entrustment     当日委托
+
+deals           当日成交
+
+new             当日新股
+
+bingo           中签查询，部分券商可查。
+
+
+**代码示范：**
+
+import puppet
+
+quant = puppet.Client()
+
+quant.login(account_no='你的账号', password='你的交易密码', comm_pwd='你的通讯密码') # 登录客户端
+
+quant.account                       # 查看当前登录的账号
+
+quant.balance                       # 查看当前账户可用余额
+
+quant.market_value                  # 当前账号的实时市值
+
+quant.buy('000001', 9.32, 100)  # 限价委托，[平安银行]在[9.32]这个价位买入[100股]
+
+quant.entrustment                   # 查看上述委托是否受理或成交了。
+
+quant.cancel_buy()                  # 撤销当前全部买单
+
+
+**使用环境：**
+
+1、同花顺 股票交易客户端，留意【部分最新】版本不能复制持仓或委托数据。推荐备用版本: https://pan.baidu.com/s/1radY1fI 密码: m9db
+
+1、要求用Python3.4及以上，强烈推荐用于科学计算的Python发行版【Anaconda3】的【最新】版本。
+
+2、Win 2k+，Windows下免安装、零配置
+
+3、Linux需安装最新的Wine，环境设为WIN7，并安装Win平台的Anaconda3。
+
+4、下载Anaconda3，推荐用清华镜像：https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/
+
+
+**技术说明：**
+
+1、本项目使用User32.dll, Kernel32.dll所涵盖的win32 API。
+
+2、按MSDN的API说明，win32 API支持WIN2000及以上版本，建议Win 7+。
+
+3、Windows 7及以上可以用Python3.5+，Windows xp sp3只能用Python3.4及以下。
+
+4、登录后的客户端最小化不影响puppet调用win32 API在后台进行交易。
+
+**鸣谢：**
+
+* https://github.com/hardywu/ 写了个rqalpha的接入模板PR，多谢支持！
+
+///////////////////////做事有底线///////////////////////////////////////
